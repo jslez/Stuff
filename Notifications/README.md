@@ -1,11 +1,14 @@
 # EIP - Selective Notification 
-
+*Not designed for messaging, p2p, etc... This is basically the equivalent of a newsletter in your inbox (gross, I know, but crypto is not flooded by spam)
 An lightweight notification system for teams aiming to communicate with their holders, and providing the flexibility for notifying specific levels based on balance or age of asset deposited into the wallet, etc...
 
 This is not intended to be a messaging play. The messaging between wallets would likely be an extension or a more robust system. For the present market size, and needs, this can satisfy and grow into a more broad offering. Teams today need to find a way to message notify holders. Current option usually is something not far from an on-chain are limited to airdrop spam
 
 ### For notification recipients
 Use of the standard lends to writing _small_, _reusable_ smart contracts that are responsible for enforcing a single transfer restriction pattern.
+* Double opt-in between user and the token team (or broadcaster).
+* Frequency of contact is defined by recipient.
+* User could set a premium to jump over their spam filter.
 
 An implementation like this provides an duel opt-in notification system (recipient and sender must agree on notifying them) which delivers transparency for all, and captures the awareness of the specific user.
 
@@ -27,11 +30,13 @@ The standard builds on ERC-20's interface, adding two functions:
 // Selective Notification Interface
 
 contract selectiveNotification is ERC20 {
-  // Lookup a specific holders permissions to the DAO notifying them. 
-  function noteAllowance (address to, bool allowed uint256 frequency) public view returns (uint8);
+  // Lookup a specific holders permissions to the DAO notifying them. ?
+  // Recipients - Mainly see it as users defining their permissions/frequency/fees
+  // Broadcaster - Send memo's and define who you want it to get to?
+  function allow (address to, uint256 frequency, uint256 spamWall) public view returns (uint8);
   
   // Sending out a memo  
-  function memo (uint8 tier) public view returns (string);
+  function newMemo (uint8 tier) public view returns (string);
   ? 
   struct memo { // Maybe better?
     address to;
@@ -43,10 +48,12 @@ contract selectiveNotification is ERC20 {
   Events Notification
 }
 ```
-
+// Wrap it in zk stuff, maybe not necessary? Self-destructing messages haha, inspector gadget.
 ## Example Usage
 
 MakerDAO
 * Community broadcast for an emergency MakerDAO governance call.
-* Notification to all CDP holders with a reference to market insight.  
+Or
+* Notification to all CDP holders with a reference to market insight. 
+Or
 * Higher level strategic for those holding MKR for >= 1 year.
